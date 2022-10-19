@@ -8,7 +8,7 @@ Contains Token Contract and Presale Contract.
 It creates both contract while deploying BigApeToken, and send the 11% that are planned for Private Sale to the Presale Contract and approves this amount.
 Private Sale will get a linear vesting. Every 2nd day 10% of their Amount will get sellable.
 
-In the first 4 Blocks the buyers will get high taxed, since it is assumed that they sniped.
+In the first 3 Blocks the buyers will get high taxed, since it is assumed that they sniped.
 
 BATSINGLESTAKING.sol:
 
