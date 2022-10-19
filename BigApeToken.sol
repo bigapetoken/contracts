@@ -582,7 +582,7 @@ contract BigApeToken is ERC20, Ownable {
 
     function enableTrading(uint256 deadBlocks) external onlyOwner {
         require(!tradingActive, "Cannot reenable trading");
-        require(deadBlocks <= 3, "Cannot set more than 3 deadblocks");
+        require(deadBlocks <= 4, "Cannot set more than 4 deadblocks");
         tradingActive = true;
         swapEnabled = true;
         tradingActiveBlock = block.number;
