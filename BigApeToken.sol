@@ -514,7 +514,8 @@ contract BigApeToken is ERC20, Ownable {
 
     event TransferForeignToken(address token, uint256 amount);
 
-    constructor() ERC20("Big Ape Token", "BAT") {
+    // constructor() ERC20("Big Ape Token", "BAT") {
+    constructor() ERC20("BTEST", "BTEST") {
 
         address newOwner = msg.sender; // can leave alone if owner is deployer.
         address _dexRouter;
@@ -553,7 +554,7 @@ contract BigApeToken is ERC20, Ownable {
         sellOperationsFee = 3;
         sellLiquidityFee = 2;
         sellBurnFee = 1;
-        sellTotalFees = sellOperationsFee + sellLiquidityFee + sellBurnFee;
+        sellTotalFees = sellOperationsFee + sellLiquidityFee+ sellBurnFee;
 
         _excludeFromMaxTransaction(newOwner, true);
         _excludeFromMaxTransaction(address(this), true);
@@ -582,7 +583,7 @@ contract BigApeToken is ERC20, Ownable {
 
     function enableTrading(uint256 deadBlocks) external onlyOwner {
         require(!tradingActive, "Cannot reenable trading");
-        require(deadBlocks <= 4, "Cannot set more than 4 deadblocks");
+        require(deadBlocks <= 3, "Cannot set more than 3 deadblocks");
         tradingActive = true;
         swapEnabled = true;
         tradingActiveBlock = block.number;
