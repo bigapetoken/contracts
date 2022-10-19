@@ -514,8 +514,7 @@ contract BigApeToken is ERC20, Ownable {
 
     event TransferForeignToken(address token, uint256 amount);
 
-    // constructor() ERC20("Big Ape Token", "BAT") {
-    constructor() ERC20("BTEST", "BTEST") {
+    constructor() ERC20("Big Ape Token", "BAT") {
 
         address newOwner = msg.sender; // can leave alone if owner is deployer.
         address _dexRouter;
