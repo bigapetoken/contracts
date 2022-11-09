@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 
 
-pragma solidity 0.8.13;
+pragma solidity 0.8.16;
 
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+//import "@nomiclabs/buidler/console.sol";
 
 /*
  * @dev Provides information about the current execution context, including the
@@ -28,164 +28,6 @@ contract Context {
         this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
         return msg.data;
     }
-}
-
-/**
- * @dev Interface of the ERC165 standard, as defined in the
- * https://eips.ethereum.org/EIPS/eip-165[EIP].
- *
- * Implementers can declare support of contract interfaces, which can then be
- * queried by others ({ERC165Checker}).
- *
- * For an implementation, see {ERC165}.
- */
-interface IERC165 {
-    /**
-     * @dev Returns true if this contract implements the interface defined by
-     * `interfaceId`. See the corresponding
-     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
-     * to learn more about how these ids are created.
-     *
-     * This function call must use less than 30 000 gas.
-     */
-    function supportsInterface(bytes4 interfaceId) external view returns (bool);
-}
-
-/**
- * @dev Required interface of an ERC721 compliant contract.
- */
-interface IERC721 is IERC165 {
-    /**
-     * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
-     */
-    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-
-    /**
-     * @dev Emitted when `owner` enables `approved` to manage the `tokenId` token.
-     */
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
-
-    /**
-     * @dev Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.
-     */
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
-
-    /**
-     * @dev Returns the number of tokens in ``owner``'s account.
-     */
-    function balanceOf(address owner) external view returns (uint256 balance);
-
-    /**
-     * @dev Returns the owner of the `tokenId` token.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
-     */
-    function ownerOf(uint256 tokenId) external view returns (address owner);
-
-    /**
-     * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
-     * are aware of the ERC721 protocol to prevent tokens from being forever locked.
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `to` cannot be the zero address.
-     * - `tokenId` token must exist and be owned by `from`.
-     * - If the caller is not `from`, it must be have been allowed to move this token by either {approve} or {setApprovalForAll}.
-     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
-     *
-     * Emits a {Transfer} event.
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
-
-    /**
-     * @dev Transfers `tokenId` token from `from` to `to`.
-     *
-     * WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `to` cannot be the zero address.
-     * - `tokenId` token must be owned by `from`.
-     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
-
-    /**
-     * @dev Gives permission to `to` to transfer `tokenId` token to another account.
-     * The approval is cleared when the token is transferred.
-     *
-     * Only a single account can be approved at a time, so approving the zero address clears previous approvals.
-     *
-     * Requirements:
-     *
-     * - The caller must own the token or be an approved operator.
-     * - `tokenId` must exist.
-     *
-     * Emits an {Approval} event.
-     */
-    function approve(address to, uint256 tokenId) external;
-
-    /**
-     * @dev Returns the account approved for `tokenId` token.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
-     */
-    function getApproved(uint256 tokenId) external view returns (address operator);
-
-    /**
-     * @dev Approve or remove `operator` as an operator for the caller.
-     * Operators can call {transferFrom} or {safeTransferFrom} for any token owned by the caller.
-     *
-     * Requirements:
-     *
-     * - The `operator` cannot be the caller.
-     *
-     * Emits an {ApprovalForAll} event.
-     */
-    function setApprovalForAll(address operator, bool _approved) external;
-
-    /**
-     * @dev Returns if the `operator` is allowed to manage all of the assets of `owner`.
-     *
-     * See {setApprovalForAll}
-     */
-    function isApprovedForAll(address owner, address operator) external view returns (bool);
-
-    /**
-     * @dev Safely transfers `tokenId` token from `from` to `to`.
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `to` cannot be the zero address.
-     * - `tokenId` token must exist and be owned by `from`.
-     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
-     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
-     *
-     * Emits a {Transfer} event.
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes calldata data
-    ) external;
 }
 
 /**
@@ -445,79 +287,31 @@ library SafeMath {
     }
 }
 
-library SafeMathInt {
-    int256 private constant MIN_INT256 = int256(1) << 255;
-    int256 private constant MAX_INT256 = ~(int256(1) << 255);
-
-    /**
-     * @dev Multiplies two int256 variables and fails on overflow.
-     */
-    function mul(int256 a, int256 b) internal pure returns (int256) {
-        int256 c = a * b;
-
-        // Detect overflow when multiplying MIN_INT256 with -1
-        require(c != MIN_INT256 || (a & MIN_INT256) != (b & MIN_INT256));
-        require((b == 0) || (c / b == a));
-        return c;
-    }
-
-    /**
-     * @dev Division of two int256 variables and fails on overflow.
-     */
-    function div(int256 a, int256 b) internal pure returns (int256) {
-        // Prevent overflow when dividing MIN_INT256 by -1
-        require(b != -1 || a != MIN_INT256);
-
-        // Solidity already throws when dividing by 0.
-        return a / b;
-    }
-
-    /**
-     * @dev Subtracts two int256 variables and fails on overflow.
-     */
-    function sub(int256 a, int256 b) internal pure returns (int256) {
-        int256 c = a - b;
-        require((b >= 0 && c <= a) || (b < 0 && c > a));
-        return c;
-    }
-
-    /**
-     * @dev Adds two int256 variables and fails on overflow.
-     */
-    function add(int256 a, int256 b) internal pure returns (int256) {
-        int256 c = a + b;
-        require((b >= 0 && c >= a) || (b < 0 && c < a));
-        return c;
-    }
-
-    /**
-     * @dev Converts to absolute value, and fails on overflow.
-     */
-    function abs(int256 a) internal pure returns (int256) {
-        require(a != MIN_INT256);
-        return a < 0 ? -a : a;
-    }
-
-
-    function toUint256Safe(int256 a) internal pure returns (uint256) {
-        require(a >= 0);
-        return uint256(a);
-    }
-}
-
-library SafeMathUint {
-  function toInt256Safe(uint256 a) internal pure returns (int256) {
-    int256 b = int256(a);
-    require(b >= 0);
-    return b;
-  }
-}
-
-interface IERC20 {
+interface IBEP20 {
     /**
      * @dev Returns the amount of tokens in existence.
      */
     function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the token decimals.
+     */
+    function decimals() external view returns (uint8);
+
+    /**
+     * @dev Returns the token symbol.
+     */
+    function symbol() external view returns (string memory);
+
+    /**
+     * @dev Returns the token name.
+     */
+    function name() external view returns (string memory);
+
+    /**
+     * @dev Returns the bep token owner.
+     */
+    function getOwner() external view returns (address);
 
     /**
      * @dev Returns the amount of tokens owned by `account`.
@@ -540,7 +334,7 @@ interface IERC20 {
      *
      * This value changes when {approve} or {transferFrom} are called.
      */
-    function allowance(address owner, address spender) external view returns (uint256);
+    function allowance(address _owner, address spender) external view returns (uint256);
 
     /**
      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -586,6 +380,100 @@ interface IERC20 {
      * a call to {approve}. `value` is the new allowance.
      */
     event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+/**
+ * @title SafeBEP20
+ * @dev Wrappers around BEP20 operations that throw on failure (when the token
+ * contract returns false). Tokens that return no value (and instead revert or
+ * throw on failure) are also supported, non-reverting calls are assumed to be
+ * successful.
+ * To use this library you can add a `using SafeBEP20 for IBEP20;` statement to your contract,
+ * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
+ */
+library SafeBEP20 {
+    using SafeMath for uint256;
+    using Address for address;
+
+    function safeTransfer(
+        IBEP20 token,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
+    }
+
+    function safeTransferFrom(
+        IBEP20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+    }
+
+    /**
+     * @dev Deprecated. This function has issues similar to the ones found in
+     * {IBEP20-approve}, and its usage is discouraged.
+     *
+     * Whenever possible, use {safeIncreaseAllowance} and
+     * {safeDecreaseAllowance} instead.
+     */
+    function safeApprove(
+        IBEP20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        // safeApprove should only be called when setting an initial allowance,
+        // or when resetting it to zero. To increase and decrease it, use
+        // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
+        // solhint-disable-next-line max-line-length
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
+            'SafeBEP20: approve from non-zero to non-zero allowance'
+        );
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
+    }
+
+    function safeIncreaseAllowance(
+        IBEP20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance = token.allowance(address(this), spender).add(value);
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    }
+
+    function safeDecreaseAllowance(
+        IBEP20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance = token.allowance(address(this), spender).sub(
+            value,
+            'SafeBEP20: decreased allowance below zero'
+        );
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    }
+
+    /**
+     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+     * on the return value: the return value is optional (but if data is returned, it must not be false).
+     * @param token The token targeted by the call.
+     * @param data The call data (encoded using abi.encode or one of its variants).
+     */
+    function _callOptionalReturn(IBEP20 token, bytes memory data) private {
+        // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
+        // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
+        // the target address contains contract code and also asserts for success in the low-level call.
+
+        bytes memory returndata = address(token).functionCall(data, 'SafeBEP20: low-level call failed');
+        if (returndata.length > 0) {
+            // Return data is optional
+            // solhint-disable-next-line max-line-length
+            require(abi.decode(returndata, (bool)), 'SafeBEP20: BEP20 operation did not succeed');
+        }
+    }
 }
 
 /**
@@ -746,24 +634,6 @@ library Address {
     }
 }
 
-interface IERC721Receiver {
-    /**
-     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
-     * by `operator` from `from`, this function is called.
-     *
-     * It must return its Solidity selector to confirm the token transfer.
-     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
-     *
-     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
-     */
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4);
-}
-
 abstract contract ReentrancyGuard {
     // Booleans are more expensive than uint256 or any type that takes up a full
     // word because each write operation emits an extra SLOAD to first read the
@@ -807,37 +677,29 @@ abstract contract ReentrancyGuard {
     }
 }
 
-contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
+contract BigApeSoloStaking is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
-    using EnumerableSet for EnumerableSet.UintSet;
+    using SafeBEP20 for IBEP20;
 
     // Info of each user.
     struct UserInfo {
         uint256 amount;     // How many LP tokens the user has provided.
-        uint256 multipliedAmount;
         uint256 rewardDebt; // Reward debt. See explanation below.
     }
 
     // Info of each pool.
     struct PoolInfo {
-        IERC20 lpToken;           // Address of LP token contract.
+        IBEP20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. Tokens to distribute per block.
         uint256 lastRewardTimestamp;  // Last block number that Tokens distribution occurs.
         uint256 accTokensPerShare; // Accumulated Tokens per share, times 1e12. See below.
     }
 
-    IERC20 public immutable stakingToken;
-    IERC20 public immutable rewardToken;
+    IBEP20 public immutable stakingToken;
+    IBEP20 public immutable rewardToken;
     mapping (address => uint256) public holderUnlockTime;
 
-    mapping (address => uint256) public holderNftsStakedAmount;
-
-    mapping (address => mapping (address => EnumerableSet.UintSet)) private holderNftsStaked;
-
-    mapping (address => bool) public isValidNftToStake;
-
     uint256 public totalStaked;
-    uint256 public totalStakedMultiplied;
     uint256 public rewardsPerSecond;
     uint256 public lockDuration;
     uint256 public exitPenaltyPerc;
@@ -851,18 +713,17 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
 
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
+    event Compound(address indexed user);
+    event RewardsPaid(address indexed user, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 amount);
-    event StakedNFT(address indexed nftAddress, uint256 indexed tokenId, address indexed sender);
-    event UnstakedNFT(address indexed nftAddress, uint256 indexed tokenId, address indexed sender);
 
-    constructor(
-    ) {
-        stakingToken = IERC20(0x3E4a74De46C868B97e6A01a30314c39527BeDA56); //enter Token Contract
-        rewardToken = IERC20(0x3E4a74De46C868B97e6A01a30314c39527BeDA56); //enter Rewards Token Contract
+    constructor(address _tokenAddress, uint256 _rewardsPerSecond, uint256 _lockDurationInDays, uint256 _exitPenaltyPerc) {
+        stakingToken = IBEP20(_tokenAddress);
+        rewardToken = IBEP20(_tokenAddress);
 
-        rewardsPerSecond = 1.58 * 1e18;
-        lockDuration = 0;
-        exitPenaltyPerc = 0;
+        rewardsPerSecond = _rewardsPerSecond;
+        lockDuration = _lockDurationInDays * 1 days;
+        exitPenaltyPerc = _exitPenaltyPerc;
 
         // staking pool
         poolInfo.push(PoolInfo({
@@ -873,10 +734,7 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
         }));
 
         totalAllocPoint = 1000;
-    }
 
-    function getHolderNfts(address nftAddress, address wallet) external view returns (uint256[] memory){
-        return holderNftsStaked[wallet][nftAddress].values();
     }
 
     function stopReward() external onlyOwner {
@@ -884,91 +742,9 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
         rewardsPerSecond = 0;
     }
 
-    function updateNftToStake(address nftAddress, bool enabledToStake) external onlyOwner {
-        isValidNftToStake[nftAddress] = enabledToStake;
-    }
-
     function startReward() external onlyOwner {
         require(poolInfo[0].lastRewardTimestamp == 99999999999, "Can only start rewards once");
         poolInfo[0].lastRewardTimestamp = block.timestamp;
-    }
-
-    function stakeNft(address nftAddress, uint256 tokenId) external nonReentrant {
-        require(isValidNftToStake[nftAddress], "NFT address not valid to stake");
-        require(holderNftsStaked[msg.sender][nftAddress].length() < 3, "Cannot stake more than 3 of the same NFT");
-        
-        IERC721 nft = IERC721(nftAddress);
-        
-        UserInfo storage user = userInfo[msg.sender];
-        PoolInfo storage pool = poolInfo[0];
-
-        require(nft.getApproved(tokenId) == address(this), "Must approve token to be sent");
-
-        updatePool(0);
-
-        if (user.amount > 0) {
-            uint256 pending = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
-            if(pending >= rewardsRemaining()){
-                pending = rewardsRemaining();
-            }
-            if(pending > 0) {
-                rewardToken.transfer(address(msg.sender), pending);
-            }
-        }
-
-        nft.transferFrom(msg.sender, address(this), tokenId);
-        holderNftsStakedAmount[msg.sender] += 1;
-        holderNftsStaked[msg.sender][nftAddress].add(tokenId);
-
-        totalStakedMultiplied -= user.multipliedAmount;
-        user.multipliedAmount = user.amount * getStakingMultiplier(msg.sender) / 100;
-        totalStakedMultiplied += user.multipliedAmount;
-
-        user.rewardDebt = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12);
-
-        emit StakedNFT(nftAddress, tokenId, msg.sender);
-    }
-
-    function unstakeNft(address nftAddress, uint256 tokenId) external nonReentrant {
-        require(holderNftsStaked[msg.sender][nftAddress].contains(tokenId), "Can only unstake a tokenID allocated from this NFT address for the sender");
-        
-        IERC721 nft = IERC721(nftAddress);
-
-        UserInfo storage user = userInfo[msg.sender];
-        PoolInfo storage pool = poolInfo[0];
-
-        updatePool(0);
-
-        if (user.amount > 0) {
-            uint256 pending = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
-            if(pending >= rewardsRemaining()){
-                pending = rewardsRemaining();
-            }
-            if(pending > 0) {
-                rewardToken.transfer(address(msg.sender), pending);
-            }
-        }
-
-        nft.transferFrom(address(this), msg.sender, tokenId);
-        holderNftsStakedAmount[msg.sender] -= 1;
-        holderNftsStaked[msg.sender][nftAddress].remove(tokenId);
-
-        totalStakedMultiplied -= user.multipliedAmount;
-        user.multipliedAmount = user.amount * getStakingMultiplier(msg.sender) / 100;
-        totalStakedMultiplied += user.multipliedAmount;
-
-        user.rewardDebt = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12);
-
-        emit UnstakedNFT(nftAddress, tokenId, msg.sender);
-    }
-
-    // @dev note that you must divide this by 100 after multiplying against tokens.
-    function getStakingMultiplier(address holder) public view returns (uint256) {
-        if(holderNftsStakedAmount[holder] == 0){
-            return 100;
-        }
-        // 30% additive boost per NFT staked
-        return 100 + (holderNftsStakedAmount[holder]*30);
     }
 
     // View function to see pending Reward on frontend.
@@ -979,22 +755,21 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
             return 0;
         }
         uint256 accTokensPerShare = pool.accTokensPerShare;
-        uint256 lpSupply = totalStakedMultiplied;
+        uint256 lpSupply = totalStaked;
         if (block.timestamp > pool.lastRewardTimestamp && lpSupply != 0) {
             uint256 tokenReward = calculateNewRewards().mul(pool.allocPoint).div(totalAllocPoint);
             accTokensPerShare = accTokensPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         }
-        return user.multipliedAmount.mul(accTokensPerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accTokensPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     // Update reward variables of the given pool to be up-to-date.
     function updatePool(uint256 _pid) internal {
-
         PoolInfo storage pool = poolInfo[_pid];
         if (block.timestamp <= pool.lastRewardTimestamp) {
             return;
         }
-        uint256 lpSupply = totalStakedMultiplied;
+        uint256 lpSupply = totalStaked;
         if (lpSupply == 0) {
             pool.lastRewardTimestamp = block.timestamp;
             return;
@@ -1013,7 +788,7 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
     }
 
     // Stake primary tokens
-    function deposit(uint256 _amount) public nonReentrant {
+    function deposit(uint256 _amount) external nonReentrant {
         if(holderUnlockTime[msg.sender] == 0){
             holderUnlockTime[msg.sender] = block.timestamp + lockDuration;
         }
@@ -1022,58 +797,70 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
 
         updatePool(0);
         if (user.amount > 0) {
-            uint256 pending = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
-            if(pending >= rewardsRemaining()){
-                pending = rewardsRemaining();
-            }
+            uint256 pending = user.amount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
             if(pending > 0) {
-                rewardToken.transfer(address(msg.sender), pending);
+                require(pending <= rewardsRemaining(), "Cannot withdraw other people's staked tokens.  Contact an admin.");
+                rewardToken.safeTransfer(address(msg.sender), pending);
+                emit RewardsPaid(msg.sender, pending);
             }
         }
         uint256 amountTransferred = 0;
         if(_amount > 0) {
             uint256 initialBalance = pool.lpToken.balanceOf(address(this));
-            pool.lpToken.transferFrom(address(msg.sender), address(this), _amount);
+            pool.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             amountTransferred = pool.lpToken.balanceOf(address(this)) - initialBalance;
-            totalStakedMultiplied -= user.multipliedAmount;
             user.amount = user.amount.add(amountTransferred);
-            user.multipliedAmount = user.amount * getStakingMultiplier(msg.sender) / 100;
             totalStaked += amountTransferred;
-            totalStakedMultiplied += user.multipliedAmount;
         }
-
-        user.rewardDebt = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accTokensPerShare).div(1e12);
 
         emit Deposit(msg.sender, _amount);
     }
 
+    function compound() external nonReentrant {
+        PoolInfo storage pool = poolInfo[0];
+        UserInfo storage user = userInfo[msg.sender];
+
+        updatePool(0);
+        if (user.amount > 0) {
+            uint256 pending = user.amount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
+            if(pending > 0) {
+                require(pending <= rewardsRemaining(), "Cannot withdraw other people's staked tokens.  Contact an admin.");
+                user.amount += pending;
+                totalStaked += pending;
+                emit RewardsPaid(msg.sender, pending);
+            }
+        }
+
+        user.rewardDebt = user.amount.mul(pool.accTokensPerShare).div(1e12);
+        emit Compound(msg.sender);
+    }
+
     // Withdraw primary tokens from STAKING.
 
-    function withdraw(uint256 _amount) public nonReentrant {
+    function withdraw() external nonReentrant {
 
         require(holderUnlockTime[msg.sender] <= block.timestamp, "May not do normal withdraw early");
         
         PoolInfo storage pool = poolInfo[0];
         UserInfo storage user = userInfo[msg.sender];
 
+        uint256 _amount = user.amount;
         updatePool(0);
-        uint256 pending = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
-        if(pending >= rewardsRemaining()){
-            pending = rewardsRemaining();
-        }
-        if(pending > 0) {
-            rewardToken.transfer(payable(address(msg.sender)), pending);
+        uint256 pending = user.amount.mul(pool.accTokensPerShare).div(1e12).sub(user.rewardDebt);
+        if(pending > 0){
+            require(pending <= rewardsRemaining(), "Cannot withdraw other people's staked tokens.  Contact an admin.");
+            rewardToken.safeTransfer(address(msg.sender), pending);
+            emit RewardsPaid(msg.sender, pending);
         }
 
         if(_amount > 0) {
-            user.amount -= _amount;
-            user.multipliedAmount = user.amount * getStakingMultiplier(msg.sender) / 100;
+            user.amount = 0;
             totalStaked -= _amount;
-            totalStakedMultiplied -= _amount * getStakingMultiplier(msg.sender) / 100;
-            pool.lpToken.transfer(address(msg.sender), _amount);
+            pool.lpToken.safeTransfer(address(msg.sender), _amount);
         }
 
-        user.rewardDebt = user.multipliedAmount.mul(pool.accTokensPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accTokensPerShare).div(1e12);
         
         if(user.amount > 0){
             holderUnlockTime[msg.sender] = block.timestamp + lockDuration;
@@ -1090,23 +877,21 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
         UserInfo storage user = userInfo[msg.sender];
         uint256 _amount = user.amount;
         totalStaked -= _amount;
-        totalStakedMultiplied -= user.multipliedAmount;
         // exit penalty for early unstakers, penalty held on contract as rewards.
         if(holderUnlockTime[msg.sender] >= block.timestamp){
             _amount -= _amount * exitPenaltyPerc / 100;
         }
         holderUnlockTime[msg.sender] = 0;
-        pool.lpToken.transfer(address(msg.sender), _amount);
+        pool.lpToken.safeTransfer(address(msg.sender), _amount);
         user.amount = 0;
-        user.multipliedAmount = 0;
         user.rewardDebt = 0;
         emit EmergencyWithdraw(msg.sender, _amount);
     }
 
     // Withdraw reward. EMERGENCY ONLY. This allows the owner to migrate rewards to a new staking pool since we are not minting new tokens.
     function emergencyRewardWithdraw(uint256 _amount) external onlyOwner {
-        require(_amount <= rewardsRemaining(), 'not enough tokens to take out');
-        rewardToken.transfer(address(msg.sender), _amount);
+        require(_amount <= rewardToken.balanceOf(address(this)) - totalStaked, 'not enough tokens to take out');
+        rewardToken.safeTransfer(address(msg.sender), _amount);
     }
 
     function calculateNewRewards() public view returns (uint256) {
@@ -1114,7 +899,7 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
         if(pool.lastRewardTimestamp > block.timestamp){
             return 0;
         }
-        return ((block.timestamp - pool.lastRewardTimestamp) * rewardsPerSecond);
+        return (((block.timestamp - pool.lastRewardTimestamp) * rewardsPerSecond));
     }
 
     function rewardsRemaining() public view returns (uint256){
@@ -1122,9 +907,13 @@ contract BATSINGLESTAKING is Ownable, ReentrancyGuard {
     }
 
     function updateRewardsPerSecond(uint256 newRewardsPerSecond) external onlyOwner {
-        require(rewardsPerSecond <= 10, "Rewards per second must be below 10,000,000");
         updatePool(0);
-        rewardsPerSecond = newRewardsPerSecond * 1e18;
+        rewardsPerSecond = newRewardsPerSecond;
+    }
+
+    function updateLockDuration(uint256 daysForLock) external onlyOwner {
+        require(daysForLock <= 365, "Lock must be 365 days or less.");
+        lockDuration = daysForLock * 1 days;
     }
 
     function updateExitPenalty(uint256 newPenaltyPerc) external onlyOwner {
