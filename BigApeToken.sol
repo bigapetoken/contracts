@@ -411,6 +411,10 @@ interface IDexFactory {
     function createPair(address tokenA, address tokenB) external returns (address pair);
 }
 
+interface ILpPair {
+    function sync() external;
+}
+
 contract BigApeToken is ERC20, Ownable {
 
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -471,6 +475,7 @@ contract BigApeToken is ERC20, Ownable {
 
     uint256 public tokensForOperations;
     uint256 public tokensForBurn;
+    uint256 public tokensForLiquidity;
 
     /******************/
 
@@ -515,7 +520,7 @@ contract BigApeToken is ERC20, Ownable {
     event TransferForeignToken(address token, uint256 amount);
 
     constructor() ERC20("Big Ape Token", "BAT") {
-    
+
         address newOwner = msg.sender; // can leave alone if owner is deployer.
         address _dexRouter;
 
@@ -756,44 +761,35 @@ contract BigApeToken is ERC20, Ownable {
         }
 
         uint256 fees = 0;
-        uint256 tokensForLiquidity;
-        address liquidityReceiver;
 
         // only take fees on buys/sells, do not take on wallet transfers
         if(takeFee){
             // bot/sniper penalty.
             if(earlyBuyPenaltyInEffect() && automatedMarketMakerPairs[from] && !automatedMarketMakerPairs[to] && buyTotalFees > 0){
-                liquidityReceiver = from;
-
                 fees = amount * 99 / 100;
-        	    tokensForLiquidity = fees * buyLiquidityFee / buyTotalFees;
+        	    tokensForLiquidity += fees * buyLiquidityFee / buyTotalFees;
                 tokensForOperations += fees * buyOperationsFee / buyTotalFees;
                 tokensForBurn += fees * buyBurnFee / buyTotalFees;
             }
 
             // on sell
             else if (automatedMarketMakerPairs[to] && sellTotalFees > 0){
-                liquidityReceiver = to;
                 fees = amount * sellTotalFees / 100;
-                tokensForLiquidity = fees * sellLiquidityFee / sellTotalFees;
+                tokensForLiquidity += fees * sellLiquidityFee / sellTotalFees;
                 tokensForOperations += fees * sellOperationsFee / sellTotalFees;
                 tokensForBurn += fees * sellBurnFee / sellTotalFees;
             }
 
             // on buy
             else if(automatedMarketMakerPairs[from] && buyTotalFees > 0) {
-                liquidityReceiver = from;
         	    fees = amount * buyTotalFees / 100;
-        	    tokensForLiquidity = fees * buyLiquidityFee / buyTotalFees;
+        	    tokensForLiquidity += fees * buyLiquidityFee / buyTotalFees;
                 tokensForOperations += fees * buyOperationsFee / buyTotalFees;
                 tokensForBurn += fees * buyBurnFee / buyTotalFees;
             }
 
             if(fees > 0){
                 super._transfer(from, address(this), fees);
-                if(tokensForLiquidity > 0){
-                    super._transfer(address(this), liquidityReceiver, tokensForLiquidity);
-                }
             }
 
         	amount -= fees;
@@ -846,6 +842,12 @@ contract BigApeToken is ERC20, Ownable {
             super._transfer(address(this), address(0xdead),tokensForBurn);
         }
         tokensForBurn = 0;
+
+        if(tokensForLiquidity > 0 && balanceOf(address(this)) >= tokensForLiquidity) {
+            super._transfer(address(this), address(lpPair),tokensForLiquidity);
+            ILpPair(lpPair).sync();
+        }
+        tokensForLiquidity = 0;
 
         uint256 contractBalance = balanceOf(address(this));
 
